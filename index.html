@@ -899,8 +899,10 @@
         </section>
       </main>
 
-  <!-- Hidden audio track -->
-  <audio id="trackAudio" src="a.MP3"></audio>
+
+      <audio id="trackAudio" preload="auto">
+  <source src="a.MP3" type="audio/mpeg">
+</audio>
 
 
       <!-- Footer -->
@@ -915,7 +917,7 @@
     </div>
   </div>
 
-    <script>
+  <script>
     // Role text rotator
     document.addEventListener("DOMContentLoaded", () => {
       const roles = [
@@ -975,78 +977,64 @@
       });
     })();
 
-    // Play button + audio logic (keeps your glow + adds sound + icon change)
-    (function () {
-      const playBtn = document.getElementById("playBtn");
-      const audio = document.getElementById("trackAudio");
-      const playIcon = document.querySelector(".play-icon");
-
-      if (!playBtn || !audio || !playIcon) return;
-
-      let isPlaying = false;
-
+    // Simple play button interaction (no popups)
+    const playBtn = document.getElementById("playBtn");
+    if (playBtn) {
+      let toggled = false;
       playBtn.addEventListener("click", () => {
-        if (audio.paused) {
-          // play
-          audio.currentTime = 0;
-          audio.play();
-          isPlaying = true;
-
-          // your original glow when "on"
+        toggled = !toggled;
+        if (toggled) {
           playBtn.style.boxShadow = "0 20px 50px rgba(74, 222, 128, 0.6)";
-
-          // turn triangle into pause square
-          playIcon.style.borderLeft = "none";
-          playIcon.style.borderTop = "0";
-          playIcon.style.borderBottom = "0";
-          playIcon.style.width = "10px";
-          playIcon.style.height = "10px";
-          playIcon.style.background = "#0b1020";
-          playIcon.style.borderRadius = "2px";
-          playIcon.style.marginLeft = "0";
         } else {
-          // pause
-          audio.pause();
-          isPlaying = false;
-
-          // original glow when "off"
           playBtn.style.boxShadow = "0 18px 40px rgba(37, 99, 235, 0.6)";
-
-          // back to triangle
-          playIcon.style.borderRadius = "0";
-          playIcon.style.background = "transparent";
-          playIcon.style.width = "0";
-          playIcon.style.height = "0";
-          playIcon.style.borderLeft = "11px solid #0b1020";
-          playIcon.style.borderTop = "7px solid transparent";
-          playIcon.style.borderBottom = "7px solid transparent";
-          playIcon.style.marginLeft = "2px";
         }
       });
+    }
 
-      // When audio ends, reset icon + glow
-      audio.addEventListener("ended", () => {
-        isPlaying = false;
-        playBtn.style.boxShadow = "0 18px 40px rgba(37, 99, 235, 0.6)";
-        playIcon.style.borderRadius = "0";
-        playIcon.style.background = "transparent";
-        playIcon.style.width = "0";
-        playIcon.style.height = "0";
-        playIcon.style.borderLeft = "11px solid #0b1020";
-        playIcon.style.borderTop = "7px solid transparent";
-        playIcon.style.borderBottom = "7px solid transparent";
-        playIcon.style.marginLeft = "2px";
-      });
-    })();
+    // Audio play/pause logic
+(function () {
+  const playButton = document.querySelector(".play-button");
+  const audio = document.getElementById("trackAudio");
+  const playIcon = document.querySelector(".play-icon");
+
+  if (!playButton || !audio || !playIcon) return;
+
+  playButton.addEventListener("click", () => {
+    if (audio.paused) {
+      audio.play();
+      playIcon.style.borderLeft = "none";
+      playIcon.style.width = "10px";
+      playIcon.style.height = "10px";
+      playIcon.style.background = "#0b1020";
+      playIcon.style.borderRadius = "2px"; // pause icon look
+      playIcon.style.marginLeft = "0";     // center the icon
+    } else {
+      audio.pause();
+      playIcon.style.borderRadius = "0";
+      playIcon.style.background = "transparent";
+      playIcon.style.width = "0";
+      playIcon.style.height = "0";
+      playIcon.style.borderLeft = "11px solid #0b1020"; // back to triangle
+      playIcon.style.borderTop = "7px solid transparent";
+      playIcon.style.borderBottom = "7px solid transparent";
+      playIcon.style.marginLeft = "2px"; // match original position
+    }
+  });
+
+  // Reset icon when audio ends
+  audio.addEventListener("ended", () => {
+    playIcon.style.borderRadius = "0";
+    playIcon.style.background = "transparent";
+    playIcon.style.width = "0";
+    playIcon.style.height = "0";
+    playIcon.style.borderLeft = "11px solid #0b1020";
+    playIcon.style.borderTop = "7px solid transparent";
+    playIcon.style.borderBottom = "7px solid transparent";
+    playIcon.style.marginLeft = "2px";
+  });
+})();
+
   </script>
 </body>
 </html>
-
-
-
-
-
-  
-
-
 
