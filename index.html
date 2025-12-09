@@ -899,6 +899,12 @@
         </section>
       </main>
 
+
+      <audio id="trackAudio" preload="auto">
+  <source src="a.mp3" type="audio/mpeg">
+</audio>
+
+
       <!-- Footer -->
       <footer class="footer-note fade-in delay-4">
         <span>Yashas.Co — a calm, liquid-glass home for web builds &amp; original music.  Built from scratch — no templates, just ideas evolving.</span>
@@ -984,7 +990,52 @@
         }
       });
     }
+
+    // Audio play/pause logic
+(function () {
+  const playButton = document.querySelector(".play-button");
+  const audio = document.getElementById("trackAudio");
+  const playIcon = document.querySelector(".play-icon");
+
+  if (!playButton || !audio || !playIcon) return;
+
+  playButton.addEventListener("click", () => {
+    if (audio.paused) {
+      audio.play();
+      playIcon.style.borderLeft = "none";
+      playIcon.style.width = "10px";
+      playIcon.style.height = "10px";
+      playIcon.style.background = "#0b1020";
+      playIcon.style.borderRadius = "2px"; // pause icon look
+      playIcon.style.marginLeft = "0";     // center the icon
+    } else {
+      audio.pause();
+      playIcon.style.borderRadius = "0";
+      playIcon.style.background = "transparent";
+      playIcon.style.width = "0";
+      playIcon.style.height = "0";
+      playIcon.style.borderLeft = "11px solid #0b1020"; // back to triangle
+      playIcon.style.borderTop = "7px solid transparent";
+      playIcon.style.borderBottom = "7px solid transparent";
+      playIcon.style.marginLeft = "2px"; // match original position
+    }
+  });
+
+  // Reset icon when audio ends
+  audio.addEventListener("ended", () => {
+    playIcon.style.borderRadius = "0";
+    playIcon.style.background = "transparent";
+    playIcon.style.width = "0";
+    playIcon.style.height = "0";
+    playIcon.style.borderLeft = "11px solid #0b1020";
+    playIcon.style.borderTop = "7px solid transparent";
+    playIcon.style.borderBottom = "7px solid transparent";
+    playIcon.style.marginLeft = "2px";
+  });
+})();
+
   </script>
 </body>
 </html>
+
 
