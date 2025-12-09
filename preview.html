@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Preview My Vibe | Yashas.Co</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* same CSS base as other pages */
+    :root {
+      --bg: #050b1a;
+      --bg-alt: #0b1327;
+      --accent: #4f9cf9;
+      --accent-soft: rgba(79, 156, 249, 0.25);
+      --text-main: #f5f5f1;
+      --text-muted: #9ca3b8;
+      --border-subtle: rgba(148, 163, 184, 0.25);
+      --card-bg: rgba(15, 23, 42, 0.8);
+      --shadow-soft: 0 24px 80px rgba(15, 23, 42, 0.8);
+      --radius-xl: 24px;
+      --transition-fast: 180ms ease-out;
+      --transition-med: 280ms ease-out;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:"Space Grotesk",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:radial-gradient(circle at top left,#111827 0,var(--bg) 40%,#020617 100%);
+      color:var(--text-main);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+    .bg-orb{position:fixed;width:420px;height:420px;border-radius:999px;filter:blur(60px);opacity:.32;pointer-events:none;mix-blend-mode:screen;transform:translate3d(0,0,0);transition:transform .2s ease-out;z-index:0}
+    .orb-1{background:radial-gradient(circle at 30% 30%,#4f46e5,#0ea5e9);top:-120px;left:-120px}
+    .orb-2{background:radial-gradient(circle at 70% 70%,#22c55e,#0f172a);bottom:-160px;right:-120px}
+    .noise-overlay{pointer-events:none;position:fixed;inset:-100px;opacity:.07;mix-blend-mode:soft-light;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5' /%3E%3C/svg%3E");z-index:0}
+    .liquid-glass{position:fixed;border-radius:999px;border:1px solid rgba(248,250,252,.35);background:radial-gradient(circle at 10% 0,rgba(248,250,252,.5),transparent 55%),linear-gradient(135deg,rgba(248,250,252,.16),rgba(15,23,42,.4));box-shadow:0 30px 80px rgba(15,23,42,.85),0 0 0 1px rgba(148,163,184,.35) inset;backdrop-filter:blur(32px) saturate(180%);-webkit-backdrop-filter:blur(32px) saturate(180%);opacity:.76;mix-blend-mode:screen;pointer-events:none;z-index:0;animation:floatGlass 18s ease-in-out infinite alternate}
+    .glass-1{width:360px;height:220px;top:10%;right:8%}
+    .glass-2{width:260px;height:260px;bottom:6%;left:-4%;animation-delay:4s}
+    .glass-3{width:180px;height:180px;top:52%;left:58%;animation-delay:8s}
+    @keyframes floatGlass{0%{transform:translate3d(0,0,0) rotate(0)}50%{transform:translate3d(10px,-16px,0) rotate(2deg)}100%{transform:translate3d(-12px,10px,0) rotate(-3deg)}}
+    .page-wrap{position:relative;z-index:1;width:100%;max-width:1120px;padding:24px}
+    .shell{border-radius:32px;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(15,23,42,.98)),radial-gradient(circle at 0% 0,rgba(148,163,184,.18),transparent 55%),radial-gradient(circle at 100% 100%,rgba(56,189,248,.18),transparent 55%);box-shadow:0 40px 120px rgba(15,23,42,.95),0 0 0 1px rgba(148,163,184,.45);border:1px solid rgba(248,250,252,.26);padding:20px 22px;backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);display:flex;flex-direction:column;gap:16px;min-height:min(620px,88vh);position:relative;overflow:hidden}
+    .shell::before{content:"";position:absolute;inset:-40%;background:radial-gradient(circle at 0 0,rgba(248,250,252,.08),transparent 55%),radial-gradient(circle at 100% 100%,rgba(59,130,246,.18),transparent 60%);opacity:.6;mix-blend-mode:soft-light;pointer-events:none}
+    .shell-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:6px;border-bottom:1px solid rgba(148,163,184,.25);position:relative;z-index:1}
+    .brand{display:flex;align-items:flex-start;gap:10px}
+    .brand-text-title{font-size:.95rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
+    .brand-text-sub{font-size:.78rem;color:var(--text-muted);opacity:.85}
+    .pill-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+    .pill{border-radius:999px;border:1px solid rgba(248,250,252,.35);padding:6px 12px;font-size:.75rem;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);background:linear-gradient(135deg,rgba(15,23,42,.75),rgba(30,64,175,.8)),radial-gradient(circle at 0 0,rgba(79,70,229,.22),rgba(15,23,42,.9));box-shadow:0 14px 30px rgba(15,23,42,.8)}
+    .pill-dot{width:6px;height:6px;border-radius:999px;background:#4ade80;box-shadow:0 0 12px rgba(74,222,128,.9)}
+    .shell-main{flex:1;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:24px;padding-top:12px;align-items:center;position:relative;z-index:1}
+    @media (max-width:780px){.shell-main{grid-template-columns:minmax(0,1fr);gap:32px}.shell{padding-inline:18px;padding-block:18px}}
+    .content-left{display:flex;flex-direction:column;gap:22px}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted)}
+    .eyebrow-line{width:34px;height:1px;background:linear-gradient(to right,transparent,rgba(148,163,184,.9))}
+    .headline{font-size:clamp(2.2rem,4vw,3rem);line-height:1.05;letter-spacing:-.04em}
+    .headline .accent{background:linear-gradient(135deg,#4f46e5,#22c55e,#0ea5e9);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .subcopy{max-width:32rem;font-size:.96rem;line-height:1.7;color:var(--text-muted)}
+    .tagline-chip{display:inline-flex;align-items:center;gap:8px;margin-top:8px;font-size:.8rem;color:var(--text-muted);padding:8px 12px;border-radius:999px;border:1px dashed rgba(148,163,184,.5);background:rgba(15,23,42,.6);backdrop-filter:blur(10px)}
+    .cta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;align-items:center}
+    .btn-primary,.btn-ghost{border-radius:999px;padding:10px 18px;font-size:.9rem;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:transform var(--transition-fast),box-shadow var(--transition-fast),background var(--transition-fast);outline:none;text-decoration:none}
+    .btn-ghost{background:linear-gradient(135deg,rgba(15,23,42,.9),rgba(15,23,42,.7));border:1px solid rgba(148,163,184,.55);color:var(--text-muted);box-shadow:0 14px 30px rgba(15,23,42,.7)}
+    .btn-ghost:hover{background:rgba(15,23,42,.95);transform:translateY(-1px);box-shadow:0 18px 32px rgba(15,23,42,.75)}
+    .content-right{position:relative;display:flex;align-items:center;justify-content:center}
+    .panel{position:relative;width:100%;max-width:360px;border-radius:var(--radius-xl);padding:18px 16px 16px;background:radial-gradient(circle at 0 0,rgba(248,250,252,.22),transparent 55%),radial-gradient(circle at 100% 100%,rgba(16,185,129,.5),transparent 55%),linear-gradient(145deg,rgba(15,23,42,.96),rgba(15,23,42,.98));border:1px solid rgba(248,250,252,.55);overflow:hidden;box-shadow:0 20px 60px rgba(15,23,42,.95),0 0 0 1px rgba(30,64,175,.5);transform-style:preserve-3d;transform:perspective(900px) rotateX(10deg) rotateY(-14deg) translateY(8px);transition:transform 260ms ease-out,box-shadow 260ms ease-out;backdrop-filter:blur(26px) saturate(180%);-webkit-backdrop-filter:blur(26px) saturate(180%)}
+    .panel:hover{transform:perspective(900px) rotateX(4deg) rotateY(-4deg) translateY(0);box-shadow:0 26px 80px rgba(15,23,42,.98),0 0 0 1px rgba(59,130,246,.6)}
+    .panel-top-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .chip{font-size:.7rem;padding:4px 9px;border-radius:999px;border:1px solid rgba(226,232,240,.75);color:rgba(15,23,42,.9);background:linear-gradient(135deg,rgba(248,250,252,.95),rgba(226,232,240,.7));backdrop-filter:blur(10px)}
+    .wave-badge{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;text-transform:uppercase;letter-spacing:.16em;color:rgba(226,232,240,.9)}
+    .wave-dot{width:7px;height:7px;border-radius:999px;background:#22c55e;box-shadow:0 0 14px rgba(34,197,94,.9)}
+    .panel-main{border-radius:18px;border:1px solid rgba(148,163,184,.75);background:radial-gradient(circle at 20% 0,rgba(248,250,252,.06),transparent 70%),radial-gradient(circle at 80% 100%,rgba(59,130,246,.22),transparent 60%),linear-gradient(145deg,rgba(15,23,42,.96),rgba(15,23,42,.98));padding:14px 13px 12px;position:relative;overflow:hidden}
+    .panel-main::before{content:"";position:absolute;inset:-40%;background:linear-gradient(120deg,rgba(248,250,252,.16),transparent 60%),radial-gradient(circle at 0 0,rgba(248,250,252,.08),transparent 55%);opacity:.8;mix-blend-mode:soft-light;pointer-events:none}
+    .panel-message-title{font-size:.8rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+    .panel-message-body{font-size:.78rem;color:rgba(191,219,254,.96);line-height:1.6;margin-bottom:10px}
+    .panel-tagline{font-size:.7rem;color:rgba(148,163,184,.95)}
+    .panel-footer{margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.7rem;color:rgba(191,219,254,.9);position:relative;z-index:1}
+    .badge-dot{width:6px;height:6px;border-radius:999px;background:#38bdf8}
+    .panel-glow{position:absolute;inset:-40%;background:radial-gradient(circle at 10% 0,rgba(248,250,252,.12),transparent 60%),radial-gradient(circle at 100% 100%,rgba(52,211,153,.24),transparent 55%);opacity:.7;pointer-events:none;mix-blend-mode:screen}
+    .footer-note{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:8px;border-top:1px dashed rgba(148,163,184,.35);font-size:.72rem;color:var(--text-muted);position:relative;z-index:1}
+    .footer-dot-row{display:flex;gap:4px;align-items:center;opacity:.7}
+    .footer-dot{width:3px;height:3px;border-radius:999px;background:rgba(148,163,184,.7)}
+    .fade-in{opacity:0;transform:translateY(18px);animation:fadeUp .7s var(--transition-med) forwards}
+    .delay-1{animation-delay:.1s}
+    .delay-2{animation-delay:.22s}
+    .delay-3{animation-delay:.34s}
+    .delay-4{animation-delay:.48s}
+    @keyframes fadeUp{0%{opacity:0;transform:translateY(18px);filter:blur(6px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
+  </style>
+</head>
+<body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="noise-overlay"></div>
+
+  <div class="liquid-glass glass-1"></div>
+  <div class="liquid-glass glass-2"></div>
+  <div class="liquid-glass glass-3"></div>
+
+  <div class="page-wrap">
+    <div class="shell">
+      <header class="shell-header fade-in delay-1">
+        <div class="brand">
+          <div>
+            <div class="brand-text-title">Yashas.Co</div>
+            <div class="brand-text-sub">Web Developer &amp; Music Artist</div>
+          </div>
+        </div>
+        <div class="pill-tags">
+          <div class="pill">
+            <span class="pill-dot"></span>
+            <span>Preview my vibe</span>
+          </div>
+          <div class="pill">
+            <span>Code • Reels • Music</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="shell-main">
+        <section class="content-left fade-in delay-2">
+          <div>
+            <div class="eyebrow">
+              <span class="eyebrow-line"></span>
+              <span>Vibe check</span>
+            </div>
+            <h1 class="headline">
+              A small preview of what I’m <span class="accent">building.</span>
+            </h1>
+          </div>
+
+          <p class="subcopy">
+            This space will soon turn into a smooth, scrollable preview of my web projects,
+            cinematic travel reels, and original music drops.
+          </p>
+
+          <div class="tagline-chip">
+            <span>🎧</span>
+            <span>This will soon preview web projects, reels, and music snippets in a smooth scroll. 🎧💻</span>
+          </div>
+
+          <div class="cta-row">
+            <a href="index.html" class="btn-ghost">
+              <span>Back to main</span>
+            </a>
+          </div>
+
+          <p class="mini-hint">
+            Think of this page as the storyboard — the actual experience is loading behind the scenes.
+          </p>
+        </section>
+
+        <section class="content-right fade-in delay-3">
+          <div class="panel" id="tiltCard">
+            <div class="panel-glow"></div>
+
+            <div class="panel-top-row">
+              <span class="chip">Preview Rail • WIP</span>
+              <span class="wave-badge">
+                <span class="wave-dot"></span>
+                <span>Coming alive</span>
+              </span>
+            </div>
+
+            <div class="panel-main">
+              <div class="panel-message-title">Future layout</div>
+              <div class="panel-message-body">
+                Imagine a vertical reel of sections — hero shots of web builds,
+                snippets of color-graded travel clips, and tiny audio previews that you can
+                tap to play as you scroll.
+              </div>
+              <div class="panel-tagline">
+                For now, this is the placeholder card reminding you that everything starts as a sketch.
+              </div>
+
+              <div class="panel-footer">
+                <div class="badges">
+                  <span class="badge-dot"></span>
+                  <span>UX storyboard</span>
+                </div>
+                <span>Scroll • Sound • Story</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer-note fade-in delay-4">
+        <span>Yashas.Co — a calm, liquid-glass home for web builds &amp; original music. This is where the vibe preview will live.</span>
+        <div class="footer-dot-row">
+          <div class="footer-dot"></div>
+          <div class="footer-dot"></div>
+          <div class="footer-dot"></div>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const orb1 = document.querySelector(".orb-1");
+      const orb2 = document.querySelector(".orb-2");
+      const tiltCard = document.getElementById("tiltCard");
+
+      window.addEventListener("mousemove", (e) => {
+        const { innerWidth, innerHeight } = window;
+        const x = (e.clientX / innerWidth) - 0.5;
+        const y = (e.clientY / innerHeight) - 0.5;
+
+        if (orb1) {
+          orb1.style.transform = `translate3d(${x * 40}px, ${y * 40}px, 0)`;
+        }
+        if (orb2) {
+          orb2.style.transform = `translate3d(${x * -40}px, ${y * -40}px, 0)`;
+        }
+        if (tiltCard) {
+          const rotateX = (-y * 10).toFixed(2);
+          const rotateY = (x * 16).toFixed(2);
+          tiltCard.style.transform =
+            `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(0)`;
+        }
+      });
+
+      window.addEventListener("mouseleave", () => {
+        if (orb1) orb1.style.transform = "translate3d(0,0,0)";
+        if (orb2) orb2.style.transform = "translate3d(0,0,0)";
+        if (tiltCard) {
+          tiltCard.style.transform =
+            "perspective(900px) rotateX(10deg) rotateY(-14deg) translateY(8px)";
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
