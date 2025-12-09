@@ -1037,6 +1037,65 @@
       });
     })();
 
+    // Simple play button interaction (no popups)
+    document.addEventListener("DOMContentLoaded", () => {
+      const roles = [
+        "Web developer",
+        "Music artist",
+        "Cinematography nerd",
+        "Bike & travel storyteller"
+      ];
+      const roleEl = document.getElementById("roleText");
+      let index = 0;
+
+      setInterval(() => {
+        index = (index + 1) % roles.length;
+        roleEl.style.opacity = 0;
+        roleEl.style.transform = "translateY(4px)";
+        setTimeout(() => {
+          roleEl.textContent = roles[index];
+          roleEl.style.opacity = 1;
+          roleEl.style.transform = "translateY(0)";
+        }, 180);
+      }, 2400);
+    });
+
+    // Mouse parallax for background orbs and tilt card
+    (function () {
+      const orb1 = document.querySelector(".orb-1");
+      const orb2 = document.querySelector(".orb-2");
+      const tiltCard = document.getElementById("tiltCard");
+
+      window.addEventListener("mousemove", (e) => {
+        const { innerWidth, innerHeight } = window;
+        const x = (e.clientX / innerWidth) - 0.5;
+        const y = (e.clientY / innerHeight) - 0.5;
+
+        if (orb1) {
+          orb1.style.transform = `translate3d(${x * 40}px, ${y * 40}px, 0)`;
+        }
+        if (orb2) {
+          orb2.style.transform = `translate3d(${x * -40}px, ${y * -40}px, 0)`;
+        }
+        if (tiltCard) {
+          const rotateX = (-y * 10).toFixed(2);
+          const rotateY = (x * 16).toFixed(2);
+          tiltCard.style.transform =
+            `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(0)`;
+        }
+      });
+
+      // Reset on mouse leave
+      window.addEventListener("mouseleave", () => {
+        if (orb1) orb1.style.transform = "translate3d(0,0,0)";
+        if (orb2) orb2.style.transform = "translate3d(0,0,0)";
+        if (tiltCard) {
+          tiltCard.style.transform =
+            "perspective(900px) rotateX(10deg) rotateY(-14deg) translateY(8px)";
+        }
+      });
+    })();
+
     // Play / pause audio on the play button
     const playBtn = document.getElementById("playBtn");
     const trackAudio = document.getElementById("trackAudio");
@@ -1065,9 +1124,56 @@
         playBtn.style.boxShadow = "0 18px 40px rgba(37, 99, 235, 0.6)";
       });
     }
+
+    // Audio play/pause logic
+(function () {
+  const playButton = document.querySelector(".play-button");
+  const audio = document.getElementById("trackAudio");
+  const playIcon = document.querySelector(".play-icon");
+
+  if (!playButton || !audio || !playIcon) return;
+
+  playButton.addEventListener("click", () => {
+    if (audio.paused) {
+      audio.play();
+      playIcon.style.borderLeft = "none";
+      playIcon.style.width = "10px";
+      playIcon.style.height = "10px";
+      playIcon.style.background = "#0b1020";
+      playIcon.style.borderRadius = "2px"; // pause icon look
+      playIcon.style.marginLeft = "0";     // center the icon
+    } else {
+      audio.pause();
+      playIcon.style.borderRadius = "0";
+      playIcon.style.background = "transparent";
+      playIcon.style.width = "0";
+      playIcon.style.height = "0";
+      playIcon.style.borderLeft = "11px solid #0b1020"; // back to triangle
+      playIcon.style.borderTop = "7px solid transparent";
+      playIcon.style.borderBottom = "7px solid transparent";
+      playIcon.style.marginLeft = "2px"; // match original position
+    }
+  });
+
+  // Reset icon when audio ends
+  audio.addEventListener("ended", () => {
+    playIcon.style.borderRadius = "0";
+    playIcon.style.background = "transparent";
+    playIcon.style.width = "0";
+    playIcon.style.height = "0";
+    playIcon.style.borderLeft = "11px solid #0b1020";
+    playIcon.style.borderTop = "7px solid transparent";
+    playIcon.style.borderBottom = "7px solid transparent";
+    playIcon.style.marginLeft = "2px";
+  });
+})();
+
   </script>
 </body>
 </html>
 
 
+
+
   
+
